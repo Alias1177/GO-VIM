@@ -123,9 +123,32 @@ return {
       lsp_keymaps = false,
       lsp_gofumpt = true,
       gofmt = "gofumpt",
-      goimports = "goimports",
+      goimports = "gopls", -- Use gopls for auto-import
       fillstruct = "gopls",
       icons = false,
+      lsp_inlay_hints = {
+        enable = true,
+        only_current_line = false,
+      },
+      lsp_codelens = true,
+      diagnostic = {
+        hdlr = false, -- Use AstroNvim's diagnostic handler
+        underline = true,
+        virtual_text = { space = 0, prefix = "" },
+        signs = true,
+        update_in_insert = false,
+      },
+      lsp_document_formatting = true,
+      lsp_on_attach = function(client, bufnr)
+        -- Enable auto-completion with unimported packages
+        if client.server_capabilities.completionProvider then
+          vim.bo[bufnr].omnifunc = "v:lua.vim.lsp.omnifunc"
+        end
+      end,
+      gopls_cmd = nil, -- Use gopls from PATH
+      gopls_remote_auto = true,
+      trouble = false, -- AstroNvim handles this
+      luasnip = true,
     },
     config = function(_, opts)
       require("go").setup(opts)
